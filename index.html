@@ -1,97 +1,129 @@
+<!DOCTYPE html>
 <html>
-	<head>
-		<script type="text/javascript">
-			function insert(num) {
-				document.form.textview.value = document.form.textview.value + num;
-			}
-			function equal() {
-				var exp = document.form.textview.value;
-				if(exp) {
-					document.form.textview.value = eval(exp);
-				}
-			}
-			function clean() {
-				document.form.textview.value = "";
-			}
-			function back() {
-				var exp = document.form.textview.value;
-				document.form.textview.value = exp.substring(0, exp.length-1);
-			}
-		</script>
-		<style type="text/css">
-			*{
-				margin: 0;
-				padding: 0;
-			}
-			.button{
-				width: 50;
-				height: 50;
-				font-size: 25;
-				margin: 2;
-				cursor: pointer;
-				background: #607d8b;
-				border: none;
-				color: white;
-			}
-			.textview{
-				width: 217;
-				margin: 5;
-				font-size: 25;
-				margin: 5;
-				padding: 5;
-				border: none;
-				color: #607d8b;
-			}
-			.main{
-				position: absolute;
-				top:50%;
-				left: 50%;
-				transform: translateX(-50%) translateY(-50%);
-			}
-			.bg{
-				background: linear-gradient(to right, #e91e63, #3f51b5);
-				height: 100%;
-			}
-		</style>
-	</head>
-	<body>
-		<div class="bg"></div>
-		<div class="main">
-			<h3 style="text-align: center;font-family:Arial">Sid's Calculator</h3>
-			<form name="form">
-				<input class="textview" name="textview">
-			</form>	
-			<table>
-				<tr>
-					<td><input class="button" type="button" value="C" onclick="clean()"></td>
-					<td><input class="button" type="button" value="<" onclick="back()"></td>
-					<td><input class="button" type="button" value="/" onclick="insert('/')"></td>
-					<td><input class="button" type="button" value="x" onclick="insert('*')"></td>
-				</tr>
-				<tr>
-					<td><input class="button" type="button" value="7" onclick="insert(7)"></td>
-					<td><input class="button" type="button" value="8" onclick="insert(8)"></td>
-					<td><input class="button" type="button" value="9" onclick="insert(9)"></td>
-					<td><input class="button" type="button" value="-" onclick="insert('-')"></td>
-				</tr>
-				<tr>
-					<td><input class="button" type="button" value="4" onclick="insert(4)"></td>
-					<td><input class="button" type="button" value="5" onclick="insert(5)"></td>
-					<td><input class="button" type="button" value="6" onclick="insert(6)"></td>
-					<td><input class="button" type="button" value="+" onclick="insert('+')"></td>
-				</tr>
-				<tr>
-					<td><input class="button" type="button" value="1" onclick="insert(1)"></td>
-					<td><input class="button" type="button" value="2" onclick="insert(2)"></td>
-					<td><input class="button" type="button" value="3" onclick="insert(3)"></td>
-					<td rowspan=5><input class="button" style="height:106" type="button" value="=" onclick="equal()"></td>
-				</tr>
-				<tr>
-					<td colspan="2"><input class="button" style="width:106" type="button" value="0" onclick="insert(0)"></td>
-					<td><input class="button" type="button" value="." onclick="insert('.')"></td>
-				</tr>
-			</table>
-			
-		</div>
-	</body>
+ 
+<head>
+  <meta charset="utf-8">
+  <title>The Colorizer!</title>
+  <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+ 
+  <style>
+    #container {
+      padding: 50px;
+      background-color: #FFF;
+    }
+    #colorHeading {
+      padding: 0;
+      margin: 50px;
+      margin-bottom: -20px;
+      font-family: sans-serif;
+    }
+ 
+    .colorSquare {
+      box-shadow: 0px 0px 25px 0px #333;
+      width: 242px;
+      height: 242px;
+      margin-bottom: 15px;
+    }
+ 
+    .colorArea input {
+      padding: 10px;
+      font-size: 16px;
+      border: 2px solid #CCC;
+    }
+ 
+    .colorArea button {
+      padding: 10px;
+      font-size: 16px;
+      margin: 10px;
+      background-color: #666;
+      color: #FFF;
+      border: 2px solid #666;
+    }
+ 
+    .colorArea button:hover {
+      background-color: #111;
+      border-color: #111;
+      cursor: pointer;
+    }
+  </style>
+</head>
+ 
+<body>
+  <h1 id="colorHeading">Colorizer</h1>
+  <div id="container"></div>
+  <script type="text/babel">
+    var heading = document.querySelector("#colorHeading");
+    class ColorLabel extends React.Component {
+      render() {
+        return ReactDOM.createPortal(
+          ": " + this.props.color
+        , heading);
+      }
+    }
+ 
+    class Colorizer extends React.Component {
+      constructor(props) {
+        super(props);
+ 
+        this.state = {
+          color: "",
+          bgColor: "white"
+        };
+ 
+      this.colorValue = this.colorValue.bind(this);
+      this.setNewColor = this.setNewColor.bind(this);
+    }
+ 
+      colorValue(e) {
+        this.setState({
+          color: e.target.value
+        });
+      }
+ 
+      setNewColor(e) {
+        this.setState({
+          bgColor: this.state.color
+        });
+ 
+        this._input.focus();
+        this._input.value = "";
+        e.preventDefault();
+      }
+ 
+      render() {
+        var squareStyle = {
+          backgroundColor: this.state.bgColor
+        };
+ 
+        var self = this;
+ 
+        return (
+          <div className="colorArea">
+            <div style={squareStyle} className="colorSquare"></div>
+       
+            <form onSubmit={this.setNewColor}>
+              <input onChange={this.colorValue}
+                     ref={
+                       (el) => this._input = el
+                     }
+                     placeholder="Enter a color value"></input>
+              <button type="submit">go</button>
+            </form>
+            <ColorLabel color={this.state.bgColor} />
+          </div>
+        );
+      }
+    }
+ 
+    ReactDOM.render(
+      <div>
+        <Colorizer />
+      </div>
+      , document.querySelector("#container")
+    );
+  </script>
+</body>
+ 
 </html>
